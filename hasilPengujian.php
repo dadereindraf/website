@@ -18,6 +18,27 @@
     <!-- App Css-->
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
+    <style>
+        /* CSS untuk mengubah warna tombol saat dihover */
+        .btn-primary:hover {
+            background-color: #0056b3 !important;
+            border-color: #0056b3 !important;
+        }
+    </style>
+
+    <style>
+        .table-borderless td:first-child {
+            width: 150px;
+            /* Atur lebar kolom pertama sesuai keinginan */
+            white-space: nowrap;
+        }
+
+        .table-borderless td:nth-child(2) {
+            width: 10px;
+            /* Atur lebar kolom kedua sesuai keinginan */
+        }
+    </style>
+
 </head>
 
 <body data-sidebar="dark">
@@ -49,33 +70,94 @@
                 <div class="container-fluid">
 
                     <div class="row">
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Data Raw</h5>
-                                    <!-- Konten data raw di sini -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Data Preprocessing</h5>
-                                    <!-- Konten data preprocessing di sini -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3">
+                        <div class="col-md-12 col-xl-12">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Hasil Pengujian</h5>
-                                    <!-- Konten hasil pengujian di sini -->
+                                    <form method="post" action="function/prosesHasilPengujian.php?aksi=pengujian" style="display: inline;">
+                                        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Mulai Pengujian</button>
+                                    </form>
+
+                                    <?php
+                                    include 'koneksi.php';
+
+                                    // Tombol hapus (delete)
+                                    if (isset($_POST["truncateHasilPengujian"])) {
+                                        $sql_truncate = "TRUNCATE TABLE pengujian";
+                                        if ($koneksi->query($sql_truncate) === TRUE) {
+                                            echo "Semua baris berhasil dihapus dari tabel.";
+                                        } else {
+                                            echo "Error: " . $sql_truncate . "<br>" . $koneksi->error;
+                                        }
+                                    }
+                                    ?>
+
+                                    <button type="submit" name="truncateHasilPengujian" class="btn btn-danger float-right" data-toggle="modal" data-target="#myModal">Hapus Hasil Pengujian</button>
+
+                                    <!-- sample modal content -->
+                                    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title mt-0" id="myModalLabel">Modal Heading</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h5>Apakah yakin untuk menghapus data?</h5>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Tidak</button>
+                                                    <form action="" method="POST">
+                                                        <button type="submit" name="truncateHasilPengujian" class="btn btn-primary waves-effect waves-light">Ya, yakin</button>
+                                                    </form>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+                                    <?php
+                                    include 'koneksi.php';
+
+                                    // Mengambil data hasil pengujian dari tabel
+                                    $sql = "SELECT * FROM pengujian ORDER BY id DESC LIMIT 1";
+                                    $result = $koneksi->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        // Menampilkan data hasil pengujian
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<table class='table table-borderless'>";
+                                            echo "<tr><td><strong>Akurasi</strong></td><td>:</td><td>" . $row["akurasi"] . "</td></tr>";
+                                            echo "<tr><td><strong>Precision 0</strong></td><td>:</td><td>" . $row["precision_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>Precision 1</strong></td><td>:</td><td>" . $row["precision_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average Precision</strong></td><td>:</td><td>" . $row["avg_precision"] . "</td></tr>";
+                                            echo "<tr><td><strong>Recall 0</strong></td><td>:</td><td>" . $row["recall_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>Recall 1</strong></td><td>:</td><td>" . $row["recall_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average Recall</strong></td><td>:</td><td>" . $row["avg_recall"] . "</td></tr>";
+                                            echo "<tr><td><strong>F1-Score 0</strong></td><td>:</td><td>" . $row["f1_score_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>F1-Score 1</strong></td><td>:</td><td>" . $row["f1_score_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average F1-Score</strong></td><td>:</td><td>" . $row["avg_f1_score"] . "</td></tr>";
+                                            echo "</table>";
+
+                                            echo "<p><strong>Confusion Matrix:</strong></p>";
+                                            echo "<table class='table table-bordered'>";
+                                            echo "<thead><tr><th></th><th>Prediksi Bukan Ujaran Kebencian</th><th>Prediksi Ujaran Kebencian</th></tr></thead>";
+                                            echo "<tbody>";
+                                            echo "<tr><td>Aktual Bukan Ujaran Kebencian</td><td>" . $row["confusion_matrix_00"] . "</td><td>" . $row["confusion_matrix_01"] . "</td></tr>";
+                                            echo "<tr><td>Aktual Ujaran Kebencian</td><td>" . $row["confusion_matrix_10"] . "</td><td>" . $row["confusion_matrix_11"] . "</td></tr>";
+                                            echo "</tbody></table>";
+                                        }
+                                    } else {
+                                        echo "<p>Tidak ada hasil pengujian.</p>";
+                                    }
+
+                                    // Menutup koneksi
+                                    $koneksi->close();
+                                    ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div> <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
@@ -93,39 +175,7 @@
     <!-- END layout-wrapper -->
 
     <!-- Right Sidebar -->
-    <div class="right-bar">
-        <div data-simplebar class="h-100">
-            <div class="rightbar-title px-3 py-4">
-                <a href="javascript:void(0);" class="right-bar-toggle float-right">
-                    <i class="mdi mdi-close noti-icon"></i>
-                </a>
-                <h5 class="m-0">Settings</h5>
-            </div>
-
-            <!-- Settings -->
-            <hr class="mt-0" />
-            <h6 class="text-center mb-0">Choose Layouts</h6>
-
-            <div class="p-4">
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-1.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="light-mode-switch" checked />
-                    <label class="custom-control-label" for="light-mode-switch">Light Mode</label>
-                </div>
-
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-2.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="dark-mode-switch" data-bsStyle="assets/css/bootstrap-dark.min.css" data-appStyle="assets/css/app-dark.min.css" />
-                    <label class="custom-control-label" for="dark-mode-switch">Dark Mode</label>
-                </div>
-            </div>
-
-        </div> <!-- end slimscroll-menu-->
-    </div>
+    <?php include 'rightSidebar.php' ?>
     <!-- /Right-bar -->
 
     <!-- Right bar overlay-->
