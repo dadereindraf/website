@@ -89,16 +89,7 @@
                     </a>
                 </li>
 
-                <li class="menu-title">Ekstraksi Fitur</li>
-
-                <li>
-                    <a href="tfidf.php" class="waves-effect">
-                        <i class="mbri-target"></i>
-                        <span>TF-IDF </span>
-                    </a>
-                </li>
-
-                <li class="menu-title">Pengujian</li>
+                <li class="menu-title">Modelling</li>
 
                 <li>
                     <a href="hasilPengujian.php" class="waves-effect">
