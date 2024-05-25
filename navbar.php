@@ -48,14 +48,7 @@
             </div>
             <!-- End of Hamburger Menu -->
         </div>
-        <div class="d-flex">
-            <!-- Avatar -->
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                </button>
-            </div>
-            <!-- End Of Avatar -->
+        <div class="d-flex"> 
             <!-- Settings -->
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
