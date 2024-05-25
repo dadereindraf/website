@@ -4,7 +4,7 @@
 include '../koneksi.php';
 
 // Atur seed untuk generator angka acak
-mt_srand(42);
+mt_srand(23);
 
 // Ambil data dari tabel 'hasil'
 $sql = "SELECT username, text, label FROM hasil";

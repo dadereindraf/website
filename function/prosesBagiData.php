@@ -3,6 +3,9 @@
 // Koneksi ke database
 include '../koneksi.php';
 
+// Atur seed untuk generator angka acak
+mt_srand(23);
+
 // Ambil data dari tabel 'undersampling'
 $sql = "SELECT text, label FROM undersampling";
 $result = $koneksi->query($sql);
