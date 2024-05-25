@@ -3,6 +3,9 @@
 // Koneksi ke database
 include '../koneksi.php';
 
+// Atur seed untuk generator angka acak
+mt_srand(42);
+
 // Ambil data dari tabel 'hasil'
 $sql = "SELECT username, text, label FROM hasil";
 $result = $koneksi->query($sql);
@@ -32,7 +35,7 @@ $desired_count = $minority_count; // Menyesuaikan dengan jumlah sampel dari kela
 // Lakukan undersampling pada kelas 'non_hate_speech'
 $undersampled_data = array_merge($hate_speech_data, array_slice($non_hate_speech_data, 0, $desired_count));
 
-// Acak urutan hasil undersampling
+// Acak urutan hasil undersampling (meskipun seed tetap 42)
 shuffle($undersampled_data);
 
 // Simpan hasil undersampling ke dalam tabel baru 'undersampling'
