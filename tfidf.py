@@ -109,68 +109,30 @@ nb_model.fit(X_train_array, df_train['label'])
 # Lakukan prediksi menggunakan model Naive Bayes
 nb_y_pred = nb_model.predict(X_test_array)
 
-# Hitung jumlah prediksi yang benar
-correct_predictions = (df_test['label'] == nb_y_pred).sum()
-
-# Hitung total prediksi
-total_predictions = len(df_test)
+# Hitung True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN)
+TP = np.sum((df_test['label'] == 1) & (nb_y_pred == 1))
+TN = np.sum((df_test['label'] == 0) & (nb_y_pred == 0))
+FP = np.sum((df_test['label'] == 0) & (nb_y_pred == 1))
+FN = np.sum((df_test['label'] == 1) & (nb_y_pred == 0))
 
 # Hitung akurasi
-manual_accuracy = correct_predictions / total_predictions
+accuracy = (TP + TN) / (TP + TN + FP + FN)
 
-print("Akurasi Naive Bayes (Manual):", manual_accuracy)
+# Hitung presisi
+precision = TP / (TP + FP) if (TP + FP) != 0 else 0
 
-# Menghitung metrik-metrik evaluasi secara manual
-def manual_classification_report(true_labels, predicted_labels):
-    # Mendefinisikan kelas yang unik
-    classes = np.unique(true_labels)
-    
-    # Membuat dictionary untuk menyimpan metrik-metrik untuk setiap kelas
-    report = {'precision': {}, 'recall': {}, 'f1-score': {}}
-    
-    # Looping melalui setiap kelas
-    for cls in classes:
-        true_positive = ((true_labels == cls) & (predicted_labels == cls)).sum()
-        false_positive = ((true_labels != cls) & (predicted_labels == cls)).sum()
-        false_negative = ((true_labels == cls) & (predicted_labels != cls)).sum()
-        
-        # Menghitung presisi
-        precision = true_positive / (true_positive + false_positive)
-        
-        # Menghitung recall
-        recall = true_positive / (true_positive + false_negative)
-        
-        # Menghitung F1-score
-        f1_score = 2 * (precision * recall) / (precision + recall)
-        
-        # Menyimpan metrik-metrik untuk kelas saat ini dalam dictionary
-        report['precision'][cls] = precision
-        report['recall'][cls] = recall
-        report['f1-score'][cls] = f1_score
-    
-    # Menghitung rata-rata presisi, recall, dan F1-score untuk semua kelas
-    avg_precision = np.mean(list(report['precision'].values()))
-    avg_recall = np.mean(list(report['recall'].values()))
-    avg_f1_score = np.mean(list(report['f1-score'].values()))
-    
-    # Menambahkan rata-rata metrik ke dalam dictionary
-    report['precision']['avg'] = avg_precision
-    report['recall']['avg'] = avg_recall
-    report['f1-score']['avg'] = avg_f1_score
-    
-    return report
+# Hitung recall
+recall = TP / (TP + FN) if (TP + FN) != 0 else 0
 
-# Membuat laporan klasifikasi secara manual
-manual_classification_rep = manual_classification_report(df_test['label'], nb_y_pred)
+# Hitung F1-score
+f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
 
-# Menampilkan laporan klasifikasi secara manual
-print("Laporan Klasifikasi Naive Bayes (Manual):")
-for metric in manual_classification_rep:
-    print(metric.capitalize())
-    for cls, value in manual_classification_rep[metric].items():
-        print(f"  {cls}: {value}")
-    print()
-    
+# Tampilkan hasil evaluasi
+print("Akurasi:", accuracy)
+print("Presisi:", precision)
+print("Recall:", recall)
+print("F1-score:", f1_score)
+
 # Menghitung confusion matrix secara manual
 def manual_confusion_matrix(true_labels, predicted_labels):
     # Mendefinisikan kelas yang unik
@@ -194,19 +156,13 @@ for i in range(manual_cm.shape[0]):
     for j in range(manual_cm.shape[1]):
         print(manual_cm[i, j], end='\t')
     print()
-    
+
 # Menyiapkan data hasil pengujian
 test_results = {
-    'akurasi': [manual_accuracy],
-    'precision_0': [manual_classification_rep['precision'][0]],
-    'precision_1': [manual_classification_rep['precision'][1]],
-    'avg_precision': [manual_classification_rep['precision']['avg']],    
-    'recall_0': [manual_classification_rep['recall'][0]],
-    'recall_1': [manual_classification_rep['recall'][1]],
-    'avg_recall': [manual_classification_rep['recall']['avg']],
-    'f1_score_0': [manual_classification_rep['f1-score'][0]],
-    'f1_score_1': [manual_classification_rep['f1-score'][1]],
-    'avg_f1_score': [manual_classification_rep['f1-score']['avg']],
+    'akurasi': [accuracy],
+    'precision': [precision],
+    'recall': [recall],
+    'f1_score': [f1_score],
     'confusion_matrix_00': [manual_cm[0, 0]],
     'confusion_matrix_01': [manual_cm[0, 1]],
     'confusion_matrix_10': [manual_cm[1, 0]],
@@ -217,7 +173,7 @@ test_results = {
 df_test_results = pd.DataFrame(test_results)
 
 # Menyimpan DataFrame ke dalam tabel pengujian di database
-table_name = 'pengujian'  # Ganti dengan nama tabel yang sesuai
+table_name = 'uji'  # Ganti dengan nama tabel yang sesuai
 df_test_results.to_sql(table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil pengujian berhasil disimpan ke dalam tabel:", table_name)
