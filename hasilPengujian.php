@@ -143,8 +143,8 @@
                                             echo "<table class='table table-bordered'>";
                                             echo "<thead><tr><th></th><th>Prediksi Bukan Ujaran Kebencian</th><th>Prediksi Ujaran Kebencian</th></tr></thead>";
                                             echo "<tbody>";
-                                            echo "<tr><td>Aktual Bukan Ujaran Kebencian</td><td>" . $row["confusion_matrix_00"] . "</td><td>" . $row["confusion_matrix_01"] . "</td></tr>";
-                                            echo "<tr><td>Aktual Ujaran Kebencian</td><td>" . $row["confusion_matrix_10"] . "</td><td>" . $row["confusion_matrix_11"] . "</td></tr>";
+                                            echo "<tr><td>Aktual Bukan Ujaran Kebencian</td><td>" . $row["confusion_matrix_00"] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>(TN)</strong></td><td>" . $row["confusion_matrix_01"] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>(FP)</td></tr>";
+                                            echo "<tr><td>Aktual Ujaran Kebencian</td><td>" . $row["confusion_matrix_10"] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>(FN)</td><td>" . $row["confusion_matrix_11"] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>(TP)</td></tr>";
                                             echo "</tbody></table>";
                                         }
                                     } else {
