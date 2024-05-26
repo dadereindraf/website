@@ -266,7 +266,44 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Hasil Pengujian</h5>
+                                    <?php
+                                    include 'koneksi.php';
 
+                                    // Mengambil data hasil pengujian dari tabel
+                                    $sql = "SELECT * FROM pengujian ORDER BY id DESC LIMIT 1";
+                                    $result = $koneksi->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        // Menampilkan data hasil pengujian
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<table class='table table-borderless'>";
+                                            echo "<tr><td><strong>Akurasi</strong></td><td>:</td><td>" . $row["akurasi"] . "</td></tr>";
+                                            echo "<tr><td><strong>Precision 0</strong></td><td>:</td><td>" . $row["precision_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>Precision 1</strong></td><td>:</td><td>" . $row["precision_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average Precision</strong></td><td>:</td><td>" . $row["avg_precision"] . "</td></tr>";
+                                            echo "<tr><td><strong>Recall 0</strong></td><td>:</td><td>" . $row["recall_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>Recall 1</strong></td><td>:</td><td>" . $row["recall_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average Recall</strong></td><td>:</td><td>" . $row["avg_recall"] . "</td></tr>";
+                                            echo "<tr><td><strong>F1-Score 0</strong></td><td>:</td><td>" . $row["f1_score_0"] . "</td></tr>";
+                                            echo "<tr><td><strong>F1-Score 1</strong></td><td>:</td><td>" . $row["f1_score_1"] . "</td></tr>";
+                                            echo "<tr><td><strong>Average F1-Score</strong></td><td>:</td><td>" . $row["avg_f1_score"] . "</td></tr>";
+                                            echo "</table>";
+
+                                            echo "<p><strong>Confusion Matrix:</strong></p>";
+                                            echo "<table class='table table-bordered'>";
+                                            echo "<thead><tr><th></th><th>Prediksi Bukan Ujaran Kebencian</th><th>Prediksi Ujaran Kebencian</th></tr></thead>";
+                                            echo "<tbody>";
+                                            echo "<tr><td>Aktual Bukan Ujaran Kebencian</td><td>" . $row["confusion_matrix_00"] . "</td><td>" . $row["confusion_matrix_01"] . "</td></tr>";
+                                            echo "<tr><td>Aktual Ujaran Kebencian</td><td>" . $row["confusion_matrix_10"] . "</td><td>" . $row["confusion_matrix_11"] . "</td></tr>";
+                                            echo "</tbody></table>";
+                                        }
+                                    } else {
+                                        echo "<p>Tidak ada hasil pengujian.</p>";
+                                    }
+
+                                    // Menutup koneksi
+                                    $koneksi->close();
+                                    ?>
                                 </div>
                             </div>
                         </div>
