@@ -92,9 +92,16 @@
                 <li class="menu-title">Modelling</li>
 
                 <li>
-                    <a href="hasilPengujia  n.php" class="waves-effect">
+                    <a href="hasilPengujian.php" class="waves-effect">
                         <i class="mbri-target"></i>
                         <span>Hasil Pengujian </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="hasilTweet.php" class="waves-effect">
+                        <i class="mbri-target"></i>
+                        <span>Hasil Pengujian Tweet </span>
                     </a>
                 </li>
             </ul>
