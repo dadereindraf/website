@@ -94,7 +94,7 @@
                 <li>
                     <a href="hasilPengujian.php" class="waves-effect">
                         <i class="mbri-target"></i>
-                        <span>Hasi Pengujian </span>
+                        <span>Hasil Pengujian </span>
                     </a>
                 </li>
             </ul>
