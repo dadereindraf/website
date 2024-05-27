@@ -173,7 +173,7 @@ test_results = {
 df_test_results = pd.DataFrame(test_results)
 
 # Menyimpan DataFrame ke dalam tabel pengujian di database
-table_name = 'uji'  # Ganti dengan nama tabel yang sesuai
+table_name = 'pengujian'  # Ganti dengan nama tabel yang sesuai
 df_test_results.to_sql(table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil pengujian berhasil disimpan ke dalam tabel:", table_name)
