@@ -120,7 +120,7 @@
                                     include 'koneksi.php';
 
                                     // Mengambil data hasil pengujian dari tabel
-                                    $sql = "SELECT * FROM uji";
+                                    $sql = "SELECT * FROM pengujian";
                                     $result = $koneksi->query($sql);
 
                                     if ($result->num_rows > 0) {
