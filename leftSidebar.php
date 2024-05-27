@@ -92,7 +92,7 @@
                 <li class="menu-title">Modelling</li>
 
                 <li>
-                    <a href="hasilPengujian.php" class="waves-effect">
+                    <a href="hasilPengujia  n.php" class="waves-effect">
                         <i class="mbri-target"></i>
                         <span>Hasil Pengujian </span>
                     </a>
