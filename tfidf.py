@@ -91,14 +91,16 @@ class NaiveBayesClassifier:
 
     def predict(self, X):
         y_pred = []
+        y_prob = []
         for x in X:
             class_probs = {}
             for cls in self.classes:
                 prior = np.log(self.class_priors[cls])
                 conditional = np.sum(np.log(self.feature_probs[cls]) * x)
                 class_probs[cls] = prior + conditional
+            y_prob.append({cls: np.exp(prob) for cls, prob in class_probs.items()})
             y_pred.append(max(class_probs, key=class_probs.get))
-        return np.array(y_pred)
+        return np.array(y_pred), y_prob
 
 # Inisialisasi model Naive Bayes
 nb_model = NaiveBayesClassifier()
@@ -107,7 +109,7 @@ nb_model = NaiveBayesClassifier()
 nb_model.fit(X_train_array, df_train['label'])
 
 # Lakukan prediksi menggunakan model Naive Bayes
-nb_y_pred = nb_model.predict(X_test_array)
+nb_y_pred, nb_y_prob = nb_model.predict(X_test_array)
 
 # Hitung True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN)
 TP = np.sum((df_test['label'] == 1) & (nb_y_pred == 1))
@@ -177,3 +179,20 @@ table_name = 'pengujian'  # Ganti dengan nama tabel yang sesuai
 df_test_results.to_sql(table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil pengujian berhasil disimpan ke dalam tabel:", table_name)
+
+# Menyiapkan data probabilitas, aktual, dan prediksi
+probs_data = {
+    'actual': df_test['label'],
+    'predicted': nb_y_pred,
+    'prob_class_0': [prob[0] for prob in nb_y_prob],
+    'prob_class_1': [prob[1] for prob in nb_y_prob]
+}
+
+# Membuat DataFrame dari data probabilitas
+df_probs = pd.DataFrame(probs_data)
+
+# Menyimpan DataFrame ke dalam tabel probs di database
+probs_table_name = 'probs'  # Ganti dengan nama tabel yang sesuai
+df_probs.to_sql(probs_table_name, con=engine, if_exists='append', index=False)
+
+print("Hasil probabilitas berhasil disimpan ke dalam tabel:", probs_table_name)
