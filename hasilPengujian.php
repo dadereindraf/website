@@ -83,14 +83,17 @@
 
                                     // Tombol hapus (delete)
                                     if (isset($_POST["truncateHasilPengujian"])) {
-                                        $sql_truncate = "TRUNCATE TABLE pengujian";
-                                        if ($koneksi->query($sql_truncate) === TRUE) {
-                                            echo "Semua baris berhasil dihapus dari tabel.";
+                                        $sql_truncate_pengujian = "TRUNCATE TABLE pengujian";
+                                        $sql_truncate_probs = "TRUNCATE TABLE probs";
+
+                                        if ($koneksi->query($sql_truncate_pengujian) === TRUE && $koneksi->query($sql_truncate_probs) === TRUE) {
+                                            echo "Semua baris berhasil dihapus dari tabel pengujian dan probs.";
                                         } else {
-                                            echo "Error: " . $sql_truncate . "<br>" . $koneksi->error;
+                                            echo "Error: " . $koneksi->error;
                                         }
                                     }
                                     ?>
+
 
                                     <button type="submit" name="truncateHasilPengujian" class="btn btn-danger float-right" data-toggle="modal" data-target="#myModal">Hapus Hasil Pengujian</button>
 
@@ -135,12 +138,11 @@
                                             echo "</tbody></table>";
 
                                             echo "<table class='table table-borderless'>";
-                                            echo "<tr><td><strong>Accuracy</strong></td><td>:</td><td>" . $row["akurasi"]. " ==  <strong>" . number_format($row["akurasi"] * 100, 2) . " %  </strong>". "</td></tr>";
-                                            echo "<tr><td><strong>Precision</strong></td><td>:</td><td>" . $row["precision"]. " ==  <strong>" . number_format($row["precision"] * 100, 2) . " %  </strong>" . "</td></tr>";
-                                            echo "<tr><td><strong>Recall</strong></td><td>:</td><td>" . $row["recall"]. " ==  <strong>" . number_format($row["recall"] * 100, 2) . " %  </strong>" . "</td></tr>";
-                                            echo "<tr><td><strong>F1-Score</strong></td><td>:</td><td>" . $row["f1_score"]. " ==  <strong>" . number_format($row["f1_score"] * 100, 2) . " %  </strong>" . "</td></tr>";
+                                            echo "<tr><td><strong>Accuracy</strong></td><td>:</td><td>" . $row["akurasi"] . " ==  <strong>" . number_format($row["akurasi"] * 100, 2) . " %  </strong>" . "</td></tr>";
+                                            echo "<tr><td><strong>Precision</strong></td><td>:</td><td>" . $row["precision"] . " ==  <strong>" . number_format($row["precision"] * 100, 2) . " %  </strong>" . "</td></tr>";
+                                            echo "<tr><td><strong>Recall</strong></td><td>:</td><td>" . $row["recall"] . " ==  <strong>" . number_format($row["recall"] * 100, 2) . " %  </strong>" . "</td></tr>";
+                                            echo "<tr><td><strong>F1-Score</strong></td><td>:</td><td>" . $row["f1_score"] . " ==  <strong>" . number_format($row["f1_score"] * 100, 2) . " %  </strong>" . "</td></tr>";
                                             echo "</table>";
-
                                         }
                                     } else {
                                         echo "<p>Tidak ada hasil pengujian.</p>";
