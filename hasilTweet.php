@@ -55,7 +55,6 @@
                                     <h5 class="card-title">Hasil Tweet</h5>
 
                                     <?php
-
                                     // Sisipkan file koneksi.php
                                     include 'koneksi.php';
 
@@ -82,80 +81,76 @@
                                                 $mismatch_count++; // Menginkremenkan jumlah perbedaan
                                             }
                                         }
+
+                                        // Menampilkan jumlah kesamaan dan perbedaan
+                                        echo "<p>Jumlah Kesamaan (Match): <strong>$match_count</strong></p>";
+                                        echo "<p>Jumlah Perbedaan (Mismatch): <strong>$mismatch_count</strong></p>";
                                     } else {
                                         echo "<p>Tidak ada data ditemukan</p>";
                                     }
-
-                                    // Menampilkan jumlah kesamaan dan perbedaan
-                                    echo "<p>Jumlah Kesamaan (Match): <strong>$match_count</strong></p>";
-                                    echo "<p>Jumlah Perbedaan (Mismatch): <strong>$mismatch_count</strong></p>";
-
                                     ?>
 
-                                    <table id="datatable" class="table table-bordered dt-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Text</th>
-                                                <th>Probabilitas NHS</th>
-                                                <th>Probabilitas HS</th>
-                                                <th>Actual</th>
-                                                <th>Predict</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            // Sisipkan file koneksi.php
-                                            include 'koneksi.php';
+                                    <?php if (mysqli_num_rows($result) > 0) : ?>
+                                        <table id="datatable" class="table table-bordered dt-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Text</th>
+                                                    <th>Probabilitas NHS</th>
+                                                    <th>Probabilitas HS</th>
+                                                    <th>Actual</th>
+                                                    <th>Predict</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Query untuk mengambil data
+                                                $sql = "SELECT u.text AS text, p.actual AS actual, p.predicted AS predicted, p.prob_class_0 AS prob0, p.prob_class_1 AS prob1 
+                    FROM dataujibungtowel u 
+                    LEFT JOIN probs p ON u.id = p.id";
+                                                $result = mysqli_query($koneksi, $sql);
 
-                                            // Query untuk mengambil data
-                                            $sql = "SELECT u.text AS text, p.actual AS actual, p.predicted AS predicted, p.prob_class_0 AS prob0, p.prob_class_1 AS prob1 
-                                                    FROM dataujibungtowel u 
-                                                    LEFT JOIN probs p ON u.id = p.id";
-                                            $result = mysqli_query($koneksi, $sql);
-
-                                            if ($result === false) {
-                                                // Handle error, contoh:
-                                                die("Kueri SQL gagal: " . mysqli_error($koneksi));
-                                            }
-
-                                            // Tampilkan data dalam tabel
-                                            if (mysqli_num_rows($result) > 0) {
-                                                $nomor = 1;
-                                                while ($row = mysqli_fetch_assoc($result)) {
-                                                    // Menentukan warna latar belakang berdasarkan nilai kolom 'actual'
-                                                    $actual_background_color = $row['actual'] == 1 ? 'red' : 'green';
-                                                    // Menentukan warna latar belakang berdasarkan nilai kolom 'predicted'
-                                                    $predicted_background_color = $row['predicted'] == 1 ? 'red' : 'green';
-
-                                                    // Membandingkan nilai probabilitas
-                                                    $prob0 = $row['prob0'];
-                                                    $prob1 = $row['prob1'];
-
-                                                    // Menentukan penanda tebal berdasarkan nilai probabilitas yang lebih besar
-                                                    $prob0_bold = $prob0 > $prob1 ? 'font-weight: bold;' : '';
-                                                    $prob1_bold = $prob1 > $prob0 ? 'font-weight: bold;' : '';
-
-                                                    echo "<tr>";
-                                                    echo "<td>" . $nomor . "</td>";
-                                                    // echo "<td>" . $row['username'] . "</td>";
-                                                    echo "<td>" . $row['text'] . "</td>";
-                                                    echo "<td style='$prob0_bold'>" . $prob0 . "</td>";
-                                                    echo "<td style='$prob1_bold'>" . $prob1 . "</td>";
-                                                    echo "<td style='background-color: $actual_background_color; color: white; padding: 5px; text-align: center; font-weight: bold;'>" . ($row['actual'] == 1 ? 'Hate Speech' : 'Non Hate Speech') . "</td>";
-                                                    echo "<td style='background-color: $predicted_background_color; color: white; padding: 5px; text-align: center; font-weight: bold;'>" . ($row['predicted'] == 1 ? 'Hate Speech' : 'Non Hate Speech') . "</td>";
-                                                    echo "</tr>";
-                                                    $nomor++;
+                                                if ($result === false) {
+                                                    // Handle error, contoh:
+                                                    die("Kueri SQL gagal: " . mysqli_error($koneksi));
                                                 }
-                                            } else {
-                                                echo "<tr><td colspan='4'>Tidak ada data ditemukan</td></tr>";
-                                            }
 
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                                // Tampilkan data dalam tabel
+                                                if (mysqli_num_rows($result) > 0) {
+                                                    $nomor = 1;
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        // Menentukan warna latar belakang berdasarkan nilai kolom 'actual'
+                                                        $actual_background_color = $row['actual'] == 1 ? 'red' : 'green';
+                                                        // Menentukan warna latar belakang berdasarkan nilai kolom 'predicted'
+                                                        $predicted_background_color = $row['predicted'] == 1 ? 'red' : 'green';
 
+                                                        // Membandingkan nilai probabilitas
+                                                        $prob0 = $row['prob0'];
+                                                        $prob1 = $row['prob1'];
+
+                                                        // Menentukan penanda tebal berdasarkan nilai probabilitas yang lebih besar
+                                                        $prob0_bold = $prob0 > $prob1 ? 'font-weight: bold;' : '';
+                                                        $prob1_bold = $prob1 > $prob0 ? 'font-weight: bold;' : '';
+
+                                                        echo "<tr>";
+                                                        echo "<td>" . $nomor . "</td>";
+                                                        echo "<td>" . $row['text'] . "</td>";
+                                                        echo "<td style='$prob0_bold'>" . $prob0 . "</td>";
+                                                        echo "<td style='$prob1_bold'>" . $prob1 . "</td>";
+                                                        echo "<td style='background-color: $actual_background_color; color: white; padding: 5px; text-align: center; font-weight: bold;'>" . ($row['actual'] == 1 ? 'Hate Speech' : 'Non Hate Speech') . "</td>";
+                                                        echo "<td style='background-color: $predicted_background_color; color: white; padding: 5px; text-align: center; font-weight: bold;'>" . ($row['predicted'] == 1 ? 'Hate Speech' : 'Non Hate Speech') . "</td>";
+                                                        echo "</tr>";
+                                                        $nomor++;
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='6'>Tidak ada data ditemukan</td></tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    <?php endif; ?>
                                 </div>
+
                             </div>
                         </div>
                     </div>
