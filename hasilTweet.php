@@ -86,7 +86,13 @@
                                         echo "<p>Jumlah Kesamaan (Match): <strong>$match_count</strong></p>";
                                         echo "<p>Jumlah Perbedaan (Mismatch): <strong>$mismatch_count</strong></p>";
                                     } else {
-                                        echo "<p>Tidak ada data ditemukan</p>";
+                                        echo "<div class='row mt-4'>
+                                                <div class='col-md-12'>
+                                                    <div class='alert alert-warning text-center' role='alert'>
+                                                        Tidak ada hasil data tweet yang ditemukan.
+                                                    </div>
+                                                </div>
+                                            </div>";
                                     }
                                     ?>
 
@@ -146,7 +152,7 @@
                                                     echo "<div class='row mt-4'>
                                                 <div class='col-md-12'>
                                                     <div class='alert alert-warning text-center' role='alert'>
-                                                        Tidak ada data prediksi yang ditemukan.
+                                                        Tidak ada hasil data tweet yang ditemukan.
                                                     </div>
                                                 </div>
                                             </div>";

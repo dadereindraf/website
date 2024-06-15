@@ -146,7 +146,7 @@
                                                 echo "<div class='row mt-4'>
                                                 <div class='col-md-12'>
                                                     <div class='alert alert-warning text-center' role='alert'>
-                                                        Tidak ada data prediksi yang ditemukan.
+                                                        Tidak ada data cleansing yang ditemukan.
                                                     </div>
                                                 </div>
                                             </div>";

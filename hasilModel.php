@@ -66,13 +66,14 @@
                                         $sql_truncate_probs = "TRUNCATE TABLE probs";
                                         $sql_truncate_modelling = "TRUNCATE TABLE modelling";
 
-                                        if ($koneksi->query($sql_truncate_pengujian) === TRUE && $koneksi->query($sql_truncate_probs) === TRUE && $koneksi->query($sql_truncate_probs) === TRUE) {
-                                            echo "Semua baris berhasil dihapus dari tabel pengujian dan probs.";
-                                        } else {
-                                            echo "Error: " . $koneksi->error;
-                                        }
+                                        // Eksekusi query untuk mengosongkan tabel
+                                        $koneksi->query($sql_truncate_pengujian);
+                                        $koneksi->query($sql_truncate_probs);
+                                        $koneksi->query($sql_truncate_modelling);
                                     }
                                     ?>
+
+
 
 
                                     <button type="submit" name="truncateHasilPengujian" class="btn btn-danger float-right" data-toggle="modal" data-target="#myModal">Hapus Hasil Pengujian</button>

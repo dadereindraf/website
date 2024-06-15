@@ -98,18 +98,18 @@
                     </a>
                 </li>
 
+                <li class="menu-title">Evaluasi</li>
                 <li>
-                    <a href="hasilTweet.php" class="waves-effect">
+                    <a href="hasilEvaluasi.php" class="waves-effect">
                         <i class="mbri-target"></i>
-                        <span>Hasil Pengujian Tweet </span>
+                        <span>Hasil Evaluasi </span>
                     </a>
                 </li>
 
-                <li class="menu-title">Evaluasi</li>
                 <li>
-                    <a href="hasilPengujian.php" class="waves-effect">
+                    <a href="hasilTweet.php" class="waves-effect">
                         <i class="mbri-target"></i>
-                        <span>Hasil Pengujian </span>
+                        <span>Hasil Data Tweet </span>
                     </a>
                 </li>
             </ul>
