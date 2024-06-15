@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Data Undersampling</title>
+    <title>Data Raw</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">>
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/logoUBL.png">
@@ -52,26 +52,30 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Data Undersampling</h5>
-                                    <form action="function/prosesUndersampling.php" method="post">
-                                        <button type="submit" class="btn btn-primary" name="undersample">Undersample Data</button>
+                                    <h5 class="card-title">Hasil Model Naive Bayes + TF-IDF</h5>
+                                    <form method="post" action="function/prosesHasilPengujian.php?aksi=pengujian" style="display: inline;">
+                                        <button type="submit" class="btn btn-primary mb-5" style="background-color: #007bff; border-color: #007bff;">Mulai Pengujian</button>
                                     </form>
 
                                     <?php
                                     include 'koneksi.php';
 
                                     // Tombol hapus (delete)
-                                    if (isset($_POST["truncateUndersampling"])) {
-                                        $sql_truncate = "TRUNCATE TABLE undersampling";
-                                        if ($koneksi->query($sql_truncate) === TRUE) {
-                                            echo "Semua baris berhasil dihapus dari tabel.";
+                                    if (isset($_POST["truncateHasilPengujian"])) {
+                                        $sql_truncate_pengujian = "TRUNCATE TABLE pengujian";
+                                        $sql_truncate_probs = "TRUNCATE TABLE probs";
+                                        $sql_truncate_modelling = "TRUNCATE TABLE modelling";
+
+                                        if ($koneksi->query($sql_truncate_pengujian) === TRUE && $koneksi->query($sql_truncate_probs) === TRUE && $koneksi->query($sql_truncate_probs) === TRUE) {
+                                            echo "Semua baris berhasil dihapus dari tabel pengujian dan probs.";
                                         } else {
-                                            echo "Error: " . $sql_truncate . "<br>" . $koneksi->error;
+                                            echo "Error: " . $koneksi->error;
                                         }
                                     }
                                     ?>
 
-                                    <button type="submit" name="truncateUndersampling" class="btn btn-danger float-right" data-toggle="modal" data-target="#myModal">Hapus Data Undersampling</button>
+
+                                    <button type="submit" name="truncateHasilPengujian" class="btn btn-danger float-right" data-toggle="modal" data-target="#myModal">Hapus Hasil Pengujian</button>
 
                                     <!-- sample modal content -->
                                     <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -88,64 +92,60 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Tidak</button>
                                                     <form action="" method="POST">
-                                                        <button type="submit" name="truncateUndersampling" class="btn btn-primary waves-effect waves-light">Ya, yakin</button>
+                                                        <button type="submit" name="truncateHasilPengujian" class="btn btn-primary waves-effect waves-light">Ya, yakin</button>
                                                     </form>
                                                 </div>
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
 
-                                    <table id="datatable" class="table table-bordered dt-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Username</th>
-                                                <th>Text</th>
-                                                <th>Label</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            // Sisipkan file koneksi.php
-                                            include 'koneksi.php';
+                                    <?php
 
-                                            // Query untuk mengambil data
-                                            $sql = "SELECT username, text, label FROM undersampling";
-                                            $result = mysqli_query($koneksi, $sql);
+                                    include 'koneksi.php';
 
-                                            // Periksa apakah kueri berhasil dijalankan
-                                            if ($result === false) {
-                                                // Handle error, contoh:
-                                                die("Kueri SQL gagal: " . mysqli_error($koneksi));
-                                            }
+                                    // Mengambil data total prediksi dari database
+                                    $sql = "SELECT totalHS, totalNHS FROM modelling";
+                                    $result = $koneksi->query($sql);
 
-                                            // Tampilkan data dalam tabel
-                                            if (mysqli_num_rows($result) > 0) {
-                                                $nomor = 1;
-                                                while ($row = mysqli_fetch_assoc($result)) {
-                                                    $background_color = $row['label'] == 1 ? 'red' : 'green';
+                                    $totalHS = 0;
+                                    $totalNHS = 0;
 
-                                                    echo "<tr>";
-                                                    echo "<td>" . $nomor . "</td>";
-                                                    echo "<td>" . $row['username'] . "</td>";
-                                                    echo "<td>" . $row['text'] . "</td>";
-                                                    // Tambahkan style untuk warna latar belakang
-                                                    echo "<td style='background-color: $background_color; color: white; padding: 5px; text-align: center; font-weight: bold;'>" . ($row['label'] == 1 ? 'Hate Speech' : 'Non Hate Speech') . "</td>";
-                                                    echo "</tr>";
-                                                    $nomor++;
-                                                }
-                                            } else {
-                                                echo "<div class='row mt-4'>
+                                    if ($result->num_rows > 0) {
+                                        // Mengambil hasil query
+                                        while ($row = $result->fetch_assoc()) {
+                                            $totalHS = $row['totalHS'];
+                                            $totalNHS = $row['totalNHS'];
+
+                                            echo "<div class='row mt-4'>
+                                        <div class='col-md-6'>
+                                            <div class='card'>
+                                                <div class='card-body'>
+                                                    <h5 class='card-title'>Total Prediksi Ujaran Kebencian</h5>
+                                                    <h3 id='totalHateSpeech' class='text-center'>$totalHS</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-md-6'>
+                                            <div class='card'>
+                                                <div class='card-body'>
+                                                    <h5 class='card-title'>Total Prediksi Bukan Ujaran Kebencian</h5>
+                                                    <h3 id='totalNonHateSpeech' class='text-center'>$totalNHS</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>";
+                                        }
+                                    } else {
+                                        echo "<div class='row mt-4'>
                                                 <div class='col-md-12'>
                                                     <div class='alert alert-warning text-center' role='alert'>
                                                         Tidak ada data prediksi yang ditemukan.
                                                     </div>
                                                 </div>
                                             </div>";
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                    }
+
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -155,12 +155,12 @@
 
                 <!-- End Page-content -->
 
+
                 <!-- ============== FOOTER ================-->
 
                 <?php include 'footer.php' ?>
 
                 <!-- ============== END OF FOOTER ================-->
-
             </div>
             <!-- end main content-->
 

@@ -196,3 +196,22 @@ probs_table_name = 'probs'  # Ganti dengan nama tabel yang sesuai
 df_probs.to_sql(probs_table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil probabilitas berhasil disimpan ke dalam tabel:", probs_table_name)
+
+# Menghitung jumlah prediksi untuk setiap kategori
+totalHS = np.sum(nb_y_pred == 1)
+totalNHS = np.sum(nb_y_pred == 0)
+
+# Menyiapkan data total prediksi
+total_predictions = {
+    'totalHS': [totalHS],
+    'totalNHS': [totalNHS]
+}
+
+# Membuat DataFrame dari data total prediksi
+df_total_predictions = pd.DataFrame(total_predictions)
+
+# Menyimpan DataFrame ke dalam tabel total_prediksi di database
+total_predictions_table_name = 'modelling'  # Ganti dengan nama tabel yang sesuai
+df_total_predictions.to_sql(total_predictions_table_name, con=engine, if_exists='append', index=False)
+
+print("Total prediksi berhasil disimpan ke dalam tabel:", total_predictions_table_name)
