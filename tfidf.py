@@ -92,15 +92,25 @@ class NaiveBayesClassifier:
     def predict(self, X):
         y_pred = []
         y_prob = []
+    
         for x in X:
             class_probs = {}
             for cls in self.classes:
-                prior = np.log(self.class_priors[cls])
-                conditional = np.sum(np.log(self.feature_probs[cls]) * x)
-                class_probs[cls] = prior + conditional
-            y_prob.append({cls: np.exp(prob) for cls, prob in class_probs.items()})
-            y_pred.append(max(class_probs, key=class_probs.get))
+                prior = self.class_priors[cls]
+                likelihood_score = np.prod(self.feature_probs[cls] ** x)  # Menggunakan np.prod untuk perkalian elemen-wise
+                class_probs[cls] = prior * likelihood_score
+            
+            # Normalisasi probabilitas
+            total_prob = sum(class_probs.values())
+            normalized_probs = {cls: prob / total_prob for cls, prob in class_probs.items()}
+            
+            normalized_probs = {cls: round(prob, 6) for cls, prob in normalized_probs.items()}
+            
+            y_prob.append(normalized_probs)
+            y_pred.append(max(normalized_probs, key=normalized_probs.get))
+        
         return np.array(y_pred), y_prob
+
 
 # Inisialisasi model Naive Bayes
 nb_model = NaiveBayesClassifier()
