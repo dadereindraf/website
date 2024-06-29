@@ -109,15 +109,7 @@
                                             // Sisipkan file koneksi.php
                                             include 'koneksi.php';
 
-                                            // Tentukan jumlah data per halaman
-                                            $data_per_halaman = 50;
-
-                                            // Hitung offset untuk query
-                                            $halaman = isset($_GET['halaman']) ? $_GET['halaman'] : 1;
-                                            $offset = ($halaman - 1) * $data_per_halaman;
-
-                                            // Query untuk mengambil data
-                                            $sql = "SELECT username, text, label FROM hasil LIMIT $offset, $data_per_halaman";
+                                            $sql = "SELECT username, text, label FROM hasil";
                                             $result = mysqli_query($koneksi, $sql);
 
                                             // Periksa apakah kueri berhasil dijalankan
@@ -128,7 +120,7 @@
 
                                             // Tampilkan data dalam tabel
                                             if (mysqli_num_rows($result) > 0) {
-                                                $nomor = $offset + 1;
+                                                $nomor = 1;
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     $background_color = $row['label'] == 1 ? 'red' : 'green';
 
@@ -142,41 +134,17 @@
                                                     $nomor++;
                                                 }
                                             } else {
-                                                echo "<tr><td colspan='4'>Tidak ada data ditemukan</td></tr>";
+                                                echo "<div class='row mt-4'>
+    <div class='col-md-12'>
+        <div class='alert alert-warning text-center' role='alert'>
+            Tidak ada data undersampling yang ditemukan.
+        </div>
+    </div>
+</div>";
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                    <!-- Tombol "Previous" dan "Next" -->
-                                    <div class="row mt-3">
-                                        <div class="col-md-6 offset-md-3 text-center">
-                                            <?php
-                                            $sql_count = "SELECT COUNT(*) AS total FROM hasil";
-                                            $result_count = mysqli_query($koneksi, $sql_count);
-                                            $row_count = mysqli_fetch_assoc($result_count);
-                                            $total_data = $row_count['total'];
-                                            $total_halaman = ceil($total_data / $data_per_halaman);
-
-                                            // Tombol "Previous"
-                                            if ($halaman > 1) {
-                                                $prev_halaman = $halaman - 1;
-                                                echo "<a href='?halaman=$prev_halaman' class='btn btn-primary mr-2'>Previous</a>";
-                                            }
-
-                                            // Tombol nomor halaman
-                                            for ($i = 1; $i <= $total_halaman; $i++) {
-                                                $active_class = ($halaman == $i) ? 'active' : ''; // Tambahkan kelas 'active' jika halaman sedang aktif
-                                                echo "<a href='?halaman=$i' class='btn btn-secondary $active_class'>$i</a>";
-                                            }
-
-                                            // Tombol "Next"
-                                            if ($halaman < $total_halaman) {
-                                                $next_halaman = $halaman + 1;
-                                                echo "<a href='?halaman=$next_halaman' class='btn btn-primary ml-2'>Next</a>";
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
