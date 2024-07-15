@@ -145,29 +145,9 @@ print("Presisi:", precision)
 print("Recall:", recall)
 print("F1-score:", f1_score)
 
-# Menghitung confusion matrix secara manual
-def manual_confusion_matrix(true_labels, predicted_labels):
-    # Mendefinisikan kelas yang unik
-    classes = np.unique(true_labels)
-    
-    # Membuat confusion matrix berukuran (n_classes, n_classes)
-    cm = np.zeros((len(classes), len(classes)), dtype=int)
-    
-    # Mengisi confusion matrix
-    for true_label, predicted_label in zip(true_labels, predicted_labels):
-        cm[true_label, predicted_label] += 1
-    
-    return cm
-
-# Membuat confusion matrix secara manual
-manual_cm = manual_confusion_matrix(df_test['label'], nb_y_pred)
-
-# Menampilkan confusion matrix secara manual
-print("Confusion Matrix Naive Bayes (Manual):")
-for i in range(manual_cm.shape[0]):
-    for j in range(manual_cm.shape[1]):
-        print(manual_cm[i, j], end='\t')
-    print()
+# Membuat confusion matrix dari TP, TN, FP, FN
+confusion_matrix = np.array([[TN, FP],
+                             [FN, TP]])
 
 # Menyiapkan data hasil pengujian
 test_results = {
@@ -175,17 +155,17 @@ test_results = {
     'precision': [precision],
     'recall': [recall],
     'f1_score': [f1_score],
-    'confusion_matrix_00': [manual_cm[0, 0]],
-    'confusion_matrix_01': [manual_cm[0, 1]],
-    'confusion_matrix_10': [manual_cm[1, 0]],
-    'confusion_matrix_11': [manual_cm[1, 1]]
+    'confusion_matrix_00': [confusion_matrix[0, 0]],
+    'confusion_matrix_01': [confusion_matrix[0, 1]],
+    'confusion_matrix_10': [confusion_matrix[1, 0]],
+    'confusion_matrix_11': [confusion_matrix[1, 1]]
 }
 
 # Membuat DataFrame dari data hasil pengujian
 df_test_results = pd.DataFrame(test_results)
 
 # Menyimpan DataFrame ke dalam tabel pengujian di database
-table_name = 'pengujian'  # Ganti dengan nama tabel yang sesuai
+table_name = 'pengujian'
 df_test_results.to_sql(table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil pengujian berhasil disimpan ke dalam tabel:", table_name)
@@ -202,7 +182,7 @@ probs_data = {
 df_probs = pd.DataFrame(probs_data)
 
 # Menyimpan DataFrame ke dalam tabel probs di database
-probs_table_name = 'probs'  # Ganti dengan nama tabel yang sesuai
+probs_table_name = 'probs'
 df_probs.to_sql(probs_table_name, con=engine, if_exists='append', index=False)
 
 print("Hasil probabilitas berhasil disimpan ke dalam tabel:", probs_table_name)
@@ -221,7 +201,7 @@ total_predictions = {
 df_total_predictions = pd.DataFrame(total_predictions)
 
 # Menyimpan DataFrame ke dalam tabel total_prediksi di database
-total_predictions_table_name = 'modelling'  # Ganti dengan nama tabel yang sesuai
+total_predictions_table_name = 'modelling' 
 df_total_predictions.to_sql(total_predictions_table_name, con=engine, if_exists='append', index=False)
 
 print("Total prediksi berhasil disimpan ke dalam tabel:", total_predictions_table_name)
