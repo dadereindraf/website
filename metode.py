@@ -75,7 +75,7 @@ tfidf_test_list, _ = compute_tfidf_for_documents(df_test['text'])
 X_test_array, _ = create_feature_matrix(tfidf_test_list, idf)
 
 # Implementasi Naive Bayes tanpa library
-class NaiveBayesClassifier:
+class NaiveBayes:
     def __init__(self):
         self.class_priors = {}
         self.feature_probs = {}
@@ -113,7 +113,7 @@ class NaiveBayesClassifier:
 
 
 # Inisialisasi model Naive Bayes
-nb_model = NaiveBayesClassifier()
+nb_model = NaiveBayes()
 
 # Latih model Naive Bayes menggunakan data latih
 nb_model.fit(X_train_array, df_train['label'])

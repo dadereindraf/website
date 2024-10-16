@@ -209,6 +209,9 @@
                             $total_rows_label_0 = "Error: " . mysqli_error($koneksi);
                             $total_rows_label_1 = "Error: " . mysqli_error($koneksi);
                         }
+                        
+                        $total = $total_rows_label_0 + $total_rows_label_1;
+                        
 
                         echo "<div class='col-md-4'>
                                 <div class='card'>
@@ -216,6 +219,7 @@
                                         <h5 class='card-title'>Label Data</h5>
                                         <p>Ujaran Kebencian      : <strong>$total_rows_label_1</strong></p>
                                         <p>Bukan Ujaran Kebencian: <strong>$total_rows_label_0</strong></p>
+                                        <p>Total: <strong>$total</strong></p>
                                     </div>
                                 </div>
                             </div>";

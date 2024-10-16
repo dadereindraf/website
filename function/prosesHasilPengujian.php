@@ -2,7 +2,7 @@
 include "../koneksi.php";    
 if($_GET['aksi'] == "pengujian") {
     // Jalankan skrip Python
-    $output = passthru("python ../tfidf.py");
+    $output = passthru("python ../metode.py");
 
     // Tampilkan pesan ke pengguna
     echo "Data telah diproses.";

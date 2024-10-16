@@ -213,7 +213,7 @@ body[data-topbar="dark"] .app-search input.form-control::-webkit-input-placehold
   color: rgba(255, 255, 255, 0.5); }
 
 body[data-sidebar="dark"] .navbar-brand-box {
-  background: #263238; }
+  background: #0c8fd0; }
 
 body[data-sidebar="dark"] .logo-dark {
   display: none; }
@@ -295,7 +295,7 @@ body[data-layout="horizontal"] .footer {
       background-color: #4b545c; }
 
 .rightbar-overlay {
-  background-color: rgba(52, 58, 64, 0.55);
+  background-color: rgba(37, 123, 209, 0.55);
   position: absolute;
   left: 0;
   right: 0;

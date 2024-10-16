@@ -370,11 +370,11 @@ def read_data_from_mysql(host, user, password, database):
         return None
 
 # Masukkan informasi koneksi ke database MySQL di sini
-host = "localhost"  # ganti dengan host Anda
-user = "root"   # ganti dengan username Anda
-password = ""  # ganti dengan password Anda
-database = "ta"  # ganti dengan nama database Anda
-query = "SELECT * FROM dataraw"  # ganti dengan query SQL Anda
+host = "localhost"  
+user = "root"   
+password = ""  
+database = "ta"  
+query = "SELECT * FROM dataraw"  
 
 # Baca data dari database MySQL
 data = read_data_from_mysql(host, user, password, database)

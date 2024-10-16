@@ -48,15 +48,7 @@
             </div>
             <!-- End of Hamburger Menu -->
         </div>
-        <div class="d-flex"> 
-            <!-- Settings -->
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
-                    <i class="mdi mdi-spin mdi-settings"></i>
-                </button>
-            </div>
-            <!-- End of Settings -->
-        </div>
+        
     </div>
     <!-- End of Navbar Header -->
 </header>
